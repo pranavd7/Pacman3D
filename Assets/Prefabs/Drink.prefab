@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7803516737856961487}
   - component: {fileID: 4767491335549348567}
   - component: {fileID: 3544431727208498073}
+  - component: {fileID: -2675829443147631396}
   m_Layer: 0
   m_Name: Drink
   m_TagString: Untagged
@@ -110,4 +111,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   points: 100
-  specialBiscuit: 1
+  specialFood: 1
+--- !u!95 &-2675829443147631396
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8392316259250032403}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ca2aa423af9e79d47a6b9f1f864bfdb6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

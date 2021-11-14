@@ -8,22 +8,55 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] TMP_Text scoreText;
     [SerializeField] TMP_Text gameOverText;
+    [SerializeField] TMP_Text timerText;
+    [SerializeField] GameObject gameOverPanel;
+    [SerializeField] GameObject controlsPanel;
+    [SerializeField] float timeToWaitAfterGameOver = 5f;
 
-    PacmanMovement pacman;
+    Pacman pacman;
     int currentPoints;
+    int totalFood;
+    bool isRestarting;
+    float timer;
 
     private void Start()
     {
-        pacman = FindObjectOfType<PacmanMovement>();
-        gameOverText.enabled = false;
+        pacman = FindObjectOfType<Pacman>();
+        totalFood = FindObjectsOfType<Food>().Length;
+        gameOverPanel.SetActive(false);
     }
 
     private void Update()
     {
         //reset current level on pressing 'R'
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && !isRestarting)
         {
             RestartLevel();
+        }
+
+        //quit on pressing 'Escape'
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            LoadLevel(0);
+        }
+
+        if (totalFood <= 0 && !isRestarting)
+        {
+            gameOverText.text = "Level Completed!";
+            gameOverText.fontSize = 50;
+            EndGame();
+        }
+
+        if (isRestarting)
+        {
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                RestartLevel();
+            }
+            timer -= Time.deltaTime;
+
+            //refresh the gameover text
+            timerText.text = "Restarting in " + (int)timer + " seconds";
         }
     }
 
@@ -31,8 +64,11 @@ public class GameManager : MonoBehaviour
     /// Add points to current score and refresh score text
     /// </summary>
     /// <param name="points"></param>
-    public void AddPoints(int points)
+    public void AddPoints(int points, bool isTrap)
     {
+        //keep track of the number of food available
+        if (!isTrap)
+            totalFood--;
         currentPoints += points;
         scoreText.text = "Score: " + currentPoints;
     }
@@ -51,6 +87,8 @@ public class GameManager : MonoBehaviour
     /// <returns></returns>
     IEnumerator GameOver()
     {
+        isRestarting = true;
+
         //disable all traps
         Trap[] traps = FindObjectsOfType<Trap>();
         foreach (Trap trap in traps)
@@ -64,8 +102,10 @@ public class GameManager : MonoBehaviour
         Destroy(pacman.gameObject);
 
         //show gameover screen
-        gameOverText.enabled = true;
-        yield return new WaitForSeconds(2);
+        gameOverPanel.SetActive(true);
+        controlsPanel.SetActive(false); ;
+        timer = timeToWaitAfterGameOver;
+        yield return new WaitForSeconds(timeToWaitAfterGameOver);
 
         RestartLevel();
     }
